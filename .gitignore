@@ -1,0 +1,12 @@
+# OS & Editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.log
+
+# Orca local temporary
+scratch/
+sim-task/
+node_modules/

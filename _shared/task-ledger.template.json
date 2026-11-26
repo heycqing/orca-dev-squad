@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_version": "v1.4.0",
+  "protocol_version": "v1.4",
+  "task_id": "",
+  "contract_version": "",
+  "state": "REQUIREMENTS_PROPOSED",
+  "branch": "",
+  "code_revision": null,
+  "environment": null,
+  "current_owner": "需求契约Bot",
+  "state_machine": {
+    "valid_states": [
+      "REQUIREMENTS_PROPOSED",
+      "REQUIREMENTS_APPROVED",
+      "IMPLEMENTING",
+      "READY_FOR_TEST",
+      "READY_FOR_REVIEW",
+      "AWAITING_HUMAN_GATE3",
+      "COMPLETED",
+      "BLOCKED",
+      "INSUFFICIENT"
+    ],
+    "transition_guards": {
+      "READY_FOR_REVIEW": "All STATE_LOGIC criteria must pass UNIT_TEST; all VISUAL_LAYOUT criteria must have BROWSER_GEOMETRY + MULTIMODAL_VISUAL evidence; all FLOW_REGRESSION criteria must have E2E_REGRESSION evidence; unresolved_gaps must be empty"
+    }
+  },
+  "acceptance_criteria": [
+    {
+      "id": "AC-1",
+      "domain": "STATE_LOGIC",
+      "description": "【模版示例】一维内存状态与逻辑（纯函数、Store状态跃迁、事件Payload、条件分支、权限判定与空态降级）",
+      "required_evidence_type": "UNIT_TEST",
+      "verification_state": {
+        "unit_test_status": "PENDING",
+        "visual_status": "NOT_REQUIRED",
+        "e2e_regression_status": "NOT_REQUIRED"
+      },
+      "status": "PENDING"
+    },
+    {
+      "id": "AC-2",
+      "domain": "VISUAL_LAYOUT",
+      "description": "【模版示例】二维空间布局与视觉呈现（须覆盖 ReDeCheck 四类失效检查：Overflow 溢出撑裂 / Overlap 重叠遮挡 / Wrapping&Alignment 居中对齐与折行 / ScrollIsolation 独立滚动，并附 VLM 视觉审阅）",
+      "required_evidence_type": "BROWSER_GEOMETRY+MULTIMODAL_VISUAL",
+      "redecheck_targets": [
+        "overflow",
+        "overlap",
+        "wrapping_alignment",
+        "scroll_isolation"
+      ],
+      "verification_state": {
+        "unit_test_status": "SKIPPED_BY_DESIGN",
+        "visual_status": "PENDING",
+        "e2e_regression_status": "NOT_REQUIRED"
+      },
+      "status": "PENDING_VISUAL_VERIFICATION"
+    },
+    {
+      "id": "AC-3",
+      "domain": "FLOW_REGRESSION",
+      "description": "【模版示例】端到端业务回归（跨组件/跨路由完整用户旅程 + 基于 Git Diff 影响面的存量关联 E2E 用例回归）",
+      "required_evidence_type": "E2E_REGRESSION",
+      "impacted_e2e_specs": [],
+      "verification_state": {
+        "unit_test_status": "NOT_REQUIRED",
+        "visual_status": "NOT_REQUIRED",
+        "e2e_regression_status": "PENDING"
+      },
+      "status": "PENDING_E2E_REGRESSION"
+    }
+  ],
+  "unresolved_gaps": [
+    {
+      "id": "GAP-1",
+      "target_ac": "AC-2",
+      "domain": "VISUAL_LAYOUT",
+      "declared_by": "CqingCodeBot",
+      "reason": "涉及二维物理空间呈现改动，按 v1.4 规约单测不编写伪属性断言，交由真实浏览器完成 ReDeCheck 几何测量与 VLM 视觉审阅",
+      "assignee": "bot:跨端测试Bot",
+      "resolved": false
+    },
+    {
+      "id": "GAP-2",
+      "target_ac": "AC-3",
+      "domain": "FLOW_REGRESSION",
+      "declared_by": "CqingCodeBot",
+      "reason": "需由跨端测试Bot执行核心用户旅程及受本次 Diff 影响的存量 E2E 回归用例集",
+      "assignee": "bot:跨端测试Bot",
+      "resolved": false
+    }
+  ],
+  "evidence": [
+    {
+      "gate": "Gate 2",
+      "type": "UNIT_TEST_AND_TYPE_CHECK",
+      "status": "PENDING",
+      "command": "npm run type-check && npx vitest run ...",
+      "commit": null,
+      "summary": "",
+      "dev_visual_precheck": {
+        "performed": false,
+        "notes": "可选：编码阶段本地浏览器几何+VLM看图预检记录（不替代 Gate 3 独立闭环）"
+      },
+      "covered_ac_ids": []
+    },
+    {
+      "gate": "Gate 3",
+      "type": "VISUAL_LAYOUT_AND_E2E_REGRESSION",
+      "status": "PENDING",
+      "visual_command": "npx playwright test ... --project=chrome && npx playwright test ... --project=edge",
+      "regression_command": "npx playwright test <impacted_specs...>",
+      "commit": null,
+      "summary": "",
+      "redecheck_metrics": {
+        "overflow_passed": null,
+        "overlap_passed": null,
+        "wrapping_alignment_error_px": null,
+        "scroll_isolation_passed": null
+      },
+      "vlm_visual_review": {
+        "verdict": null,
+        "checked_artifacts": [],
+        "notes": "仅用于定性视觉缺陷审阅（拥挤/遮挡/截断/可读性），不得替代定量几何断言"
+      },
+      "impacted_e2e_specs": [],
+      "covered_ac_ids": [],
+      "artifacts": []
+    }
+  ],
+  "unresolved": [],
+  "owner_decision": {
+    "gate": null,
+    "verdict": null,
+    "raw_instruction": null,
+    "decided_at": null
+  },
+  "events": []
+}
